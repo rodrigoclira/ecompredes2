@@ -24,12 +24,9 @@ public class MySocket {
 		
 	}
 	
-	public UDPPacket GetUDPPackage(String ip) throws Exception {
+	public UDPPacket GetUDPPackage(NetworkInterface device,String ip) throws Exception {
 		
-		// Obtem interfaces de rede.
-		NetworkInterface[] devices = JpcapCaptor.getDeviceList();
-		
-		JpcapCaptor captor = JpcapCaptor.openDevice(devices[0], 65535, false, 20);
+		JpcapCaptor captor = JpcapCaptor.openDevice(device, 65535, false, 20);
 
 		// Seta filtro para capturar pacotes.
 		captor.setFilter("net " + ip, true);
@@ -48,17 +45,14 @@ public class MySocket {
 		return p;
 	}
 	
-	public void SendUDPPacket(byte[] data, String ip) throws Exception {
-		
-		// Obtem interfaces de rede.
-		NetworkInterface[] devices = JpcapCaptor.getDeviceList();
-		
-		JpcapSender sender = JpcapSender.openDevice(devices[0]);
+	public void SendUDPPacket(NetworkInterface device, String ipSource, String ipDestination,byte[] data) throws Exception {
+								
+		JpcapSender sender = JpcapSender.openDevice(device);
 		
 		// Cria pacote a ser enviado.
 		UDPPacket p = new UDPPacket(12345, 54321);
 		p.setIPv4Parameter(0,false,false,false,0,false,false,false,0,1010101,100,IPPacket.IPPROTO_TCP,
-				  InetAddress.getByName(ip),InetAddress.getByName(ip));
+				  InetAddress.getByName(ipSource),InetAddress.getByName(ipDestination));
 		p.data = data;
 		
 		EthernetPacket ether=new EthernetPacket();
