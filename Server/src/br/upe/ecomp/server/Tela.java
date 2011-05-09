@@ -39,9 +39,8 @@ public class Tela extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				//here you put the event button
-				String input = inputMessage.getText();
+				String input = "Server diz: " + inputMessage.getText();
 				inputMessage.setText("");
-				outputMessages.setText(outputMessages.getText()+input+'\n');
 				MySocket sock = new MySocket();
 				try {
 					sock.SendUDPPacket(0, 12345, 54321, "127.0.0.1", "127.0.0.1", input.getBytes());
